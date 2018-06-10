@@ -1,0 +1,22 @@
+{ "words":
+  [
+    {
+      "german": "Wort",
+      "german_gender": "neuter",
+      "native": "Слово",
+      "id_num": 0
+    },
+    {
+      "german": "Tisch",
+      "german_gender": "masculine",
+      "native": "Стол",
+      "id_num": 1
+    },
+    {
+      "german": "Schule",
+      "german_gender": "feminine",
+      "native": "Школа",
+      "id_num": 2
+    }
+  ]
+}
