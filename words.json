@@ -16,5 +16,107 @@
     "german_gender": "feminine",
     "native": "Школа",
     "id_num": 2
+  },
+  {
+    "german": "Tag",
+    "german_gender": "masculine",
+    "native": "День",
+    "id_num": 3
+  },
+  {
+    "german": "Luft",
+    "german_gender": "feminine",
+    "native": "Воздух",
+    "id_num": 4
+  },
+  {
+    "german": "Wasser",
+    "german_gender": "neuter",
+    "native": "Вода",
+    "id_num": 5
+  },
+  {
+    "german": "Junge",
+    "german_gender": "masculine",
+    "native": "Мальчик, юноша",
+    "id_num": 6
+  },
+  {
+    "german": "Name",
+    "german_gender": "masculine",
+    "native": "Имя",
+    "id_num": 7
+  },
+  {
+    "german": "Familie",
+    "german_gender": "feminine",
+    "native": "Семья",
+    "id_num": 8
+  },
+  {
+    "german": "Zeit",
+    "german_gender": "feminine",
+    "native": "Время",
+    "id_num": 9
+  },
+  {
+    "german": "Bild",
+    "german_gender": "neuter",
+    "native": "Изображение, картина",
+    "id_num": 10
+  },
+  {
+    "german": "Lampe",
+    "german_gender": "feminine",
+    "native": "Лампа",
+    "id_num": 11
+  },
+  {
+    "german": "Mädchen",
+    "german_gender": "neuter",
+    "native": "Девочка",
+    "id_num": 12
+  },
+  {
+    "german": "Haus",
+    "german_gender": "neuter",
+    "native": "Дом",
+    "id_num": 13
+  },
+  {
+    "german": "Essen",
+    "german_gender": "neuter",
+    "native": "Еда",
+    "id_num": 14
+  },
+  {
+    "german": "Auto",
+    "german_gender": "neuter",
+    "native": "Автомобиль",
+    "id_num": 15
+  },
+  {
+    "german": "Lehrer",
+    "german_gender": "masculine",
+    "native": "Учитель",
+    "id_num": 16
+  },
+  {
+    "german": "Apfelsine",
+    "german_gender": "feminine",
+    "native": "Апельсин",
+    "id_num": 17
+  },
+  {
+    "german": "Leben",
+    "german_gender": "neuter",
+    "native": "Жизнь",
+    "id_num": 18
+  },
+  {
+    "german": "Jahr",
+    "german_gender": "neuter",
+    "native": "Год",
+    "id_num": 19
   }
 ]
