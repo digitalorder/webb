@@ -1,38 +1,7 @@
-import json
 import random
-from word import Word
-from longterm_data import LongtermData
-from datetime import datetime
-from playword import PlayWord
 from user_input import MockUserInput, ConsoleOneCharInput
+from playwords_set import PlaywordsSet
 import sys
-
-
-def load_words(f):
-    plain_data = json.load(f)
-    result = []
-    for w in plain_data['words']:
-        result.append(Word(w['german'], w['german_gender'], w['native'], w['id_num']))
-    return result
-
-
-def load_longterm_data(f):
-    plain_data = json.load(f)
-    result = list()
-    for d in plain_data:
-        try:
-            result.append(LongtermData.from_json(d))
-        except KeyError:
-            continue
-    return result
-
-
-def save_longterm_data(f, words):
-    json_repr = []
-    for w in words:
-        json_repr.append(w.json_repr())
-    json_words = json.dumps(json_repr, indent=4, sort_keys=True)
-    f.write(json_words)
 
 
 def get_guess(user_input):
@@ -61,84 +30,62 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def play_round(words, user_input):
+def play_round(playwords, user_input_generator):
+    words = playwords.select_for_next_round()
+    # print("filtered for this round: {}".format(filtered_playwords))
+    if len(words) == 0:
+        print("Good job, you've already remembered all the words for this session!")
+        return True
+
     picked_number = random.randint(0, len(words) - 1)
     word = words[picked_number]
-    word.attempts += 1
     print("{} / {}? ".format(word.german, word.native), end='')
     sys.stdout.flush()
     guessed = False
     failed_to_guess = False
     while not guessed:
-        guess = get_guess(user_input)
-        if word.german_gender == guess:
-            print(bcolors.GREEN + "Correct. " + bcolors.ENDC, end='')
-            sys.stdout.flush()
-            word.success_in_row += 1
-            guessed = True
-        elif guess == "EOF":
+        guess = get_guess(user_input_generator)
+
+        if guess == "EOF":
             print(bcolors.FUCHSIA + "Quit. " + bcolors.ENDC)
             return True
+
+        guess_result = playwords.check_guess(word, guess, failed_to_guess)
+        if guess_result:
+            print(bcolors.GREEN + "Correct. " + bcolors.ENDC, end='')
+            sys.stdout.flush()
+            guessed = True
         else:
             print(bcolors.RED + "{} is incorrect. ".format(guess) + bcolors.ENDC, end='')
             sys.stdout.flush()
-            word.success_in_row = 0
             if not failed_to_guess:
-                word.failures_timestamps.append(datetime.now())
                 failed_to_guess = True
 
-    if word.success_in_row == 3:
-        word.learned_in_session = True
-        word.success_timestamps.append(datetime.now())
+    if word.learned_in_session:
         print(bcolors.BOLD + "Now you remembered it!" + bcolors.ENDC)
     else:
         print("")
 
     return False
 
+
 if __name__ == '__main__':
     print("Welcome to Words by Ebbinghaus!\nControls: 1 - der | 2 - die | 3 - das | q - exit\n")
 
     print("Loading game data...")
-    with open("words.json", 'r') as f:
-        words = load_words(f)
-
-    try:
-        with open("player_data.json", 'r') as f:
-            longterm_data = load_longterm_data(f)
-    except FileNotFoundError:
-        longterm_data = []
-
-    playwords = list()
-    for w in words:
-        word_longterm_data = [d for d in longterm_data if d.id_num == w.id_num]
-        if len(word_longterm_data) == 0:
-            word_longterm_data = [LongtermData(w.id_num)]
-        playwords.append(PlayWord(w, word_longterm_data[0]))
-
+    playwords = PlaywordsSet("words.json", "player_data.json")
     # print("All words: {}".format(playwords))
 
     print("Configuring...")
     random.seed(0)
 
     print("Let's go!")
-    user_input = ConsoleOneCharInput()  # MockUserInput('mock_commands.txt')
+    user_input = MockUserInput('mock_commands.txt')  # ConsoleOneCharInput()
     user_abort = False
     while not user_abort:
-        # 1. word wasn't remembered in this session
-        filtered_playwords = [w for w in playwords if not w.learned_in_session]
-        # 2. learned less then an minute ago
-        filtered_playwords = [w for w in filtered_playwords if w.last_learned() > 600]
-        # print("filtered for this round: {}".format(filtered_playwords))
-
-        if len(filtered_playwords) == 0:
-            print("Good job, you've already remembered all the words for this session!")
-            break
-
-        user_abort = play_round(filtered_playwords, user_input)
+        user_abort = play_round(playwords, user_input)
 
     print("Saving your progress...")
-    with open("player_data.json", 'w') as f:
-        save_longterm_data(f, playwords)
+    playwords.save_progress()
 
     print("Bye!")

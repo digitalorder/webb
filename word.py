@@ -21,6 +21,10 @@ class Word:
     def native(self):
         return self._native
 
+    @staticmethod
+    def from_json(json_repr):
+        return Word(json_repr['german'], json_repr['german_gender'], json_repr['native'], json_repr['id_num'])
+
     def __repr__(self):
         if self._german_gender == "masculine":
             gender = "der"

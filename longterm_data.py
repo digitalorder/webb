@@ -30,7 +30,7 @@ class LongtermData:
     def id_num(self):
         return self._id_num
 
-    def json_repr(self):
+    def to_json(self):
         result = dict()
         result["id_num"] = self._id_num
         result["success_timestamps"] = [ts.strftime("%Y-%m-%d %H:%M:%S") for ts in self._success_timestamps]
